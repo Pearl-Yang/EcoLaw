@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lvfat.repository.SchoolMapper">
+    
+    <!-- 分页查询学校 -->
+    <select id="selectSchoolPage" resultType="com.lvfat.entity.School">
+        SELECT * FROM school
+        WHERE deleted = 0
+        <if test="schoolName != null and schoolName != ''">
+            AND school_name LIKE CONCAT('%', #{schoolName}, '%')
+        </if>
+        <if test="schoolType != null and schoolType != ''">
+            AND school_type = #{schoolType}
+        </if>
+        <if test="educationBureauId != null and educationBureauId != ''">
+            AND education_bureau_id = #{educationBureauId}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+    
+</mapper>

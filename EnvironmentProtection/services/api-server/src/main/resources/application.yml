@@ -1,0 +1,77 @@
+spring:
+  application:
+    name: lvfat-api-server
+
+  profiles:
+    active: dev
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/lvfat?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: 123456
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      database: 0
+      timeout: 3000ms
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  global-config:
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+jwt:
+  secret: lvfat-jwt-secret-key-2026-very-long-and-secure
+  expiration: 86400000  # 24小时
+  header: Authorization
+  prefix: Bearer
+
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket: lvfat
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+# AI服务配置
+ai:
+  service:
+    # Python AI 服务地址
+    url: http://localhost:8000
+    # 请求超时时间（毫秒）
+    timeout: 120000
+    # 是否启用流式输出
+    enable-stream: true
+  rag:
+    # 是否启用RAG检索
+    enable: true
+    # 检索返回结果数量
+    top-k: 5
+    # 最小相关度阈值
+    min-similarity: 0.3

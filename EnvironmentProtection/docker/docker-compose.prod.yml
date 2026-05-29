@@ -1,0 +1,107 @@
+# Docker Compose 生产环境配置
+
+version: '3.8'
+
+services:
+  # MySQL 数据库
+  mysql:
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: lvfat
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ../infrastructure/database/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # Redis 缓存
+  redis:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+
+  # MinIO 对象存储
+  minio:
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+
+  # API 后端服务
+  api-server:
+    image: ${REGISTRY}/lvfat-api-server:${TAG}
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/lvfat?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_PASSWORD: ${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # AI 服务
+  ai-service:
+    image: ${REGISTRY}/lvfat-ai-service:${TAG}
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+    environment:
+      LLM_API_KEY: ${LLM_API_KEY}
+      LLM_BASE_URL: ${LLM_BASE_URL}
+      MILVUS_HOST: milvus
+      REDIS_HOST: redis
+
+  # Nginx 网关
+  nginx:
+    image: ${REGISTRY}/lvfat-nginx:${TAG}
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certs:/etc/nginx/certs
+    depends_on:
+      - api-server
+      - ai-service
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  minio_data:
+    driver: local
+  milvus_data:
+    driver: local
+  certs:
+    driver: local
+
+networks:
+  default:
+    driver: bridge

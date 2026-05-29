@@ -1,0 +1,32 @@
+{
+  "name": "lvfat-mini-program",
+  "version": "1.0.0",
+  "description": "绿法通小程序端 - 普通用户入口",
+  "scripts": {
+    "dev:mp-weixin": "uni -p mp-weixin",
+    "build:mp-weixin": "uni build -p mp-weixin",
+    "dev:app": "uni -p app",
+    "build:app": "uni build -p app",
+    "dev:h5": "uni",
+    "build:h5": "uni build"
+  },
+  "dependencies": {
+    "@dcloudio/uni-app": "3.0.0-4010520240507001",
+    "@dcloudio/uni-components": "3.0.0-4010520240507001",
+    "@dcloudio/uni-h5": "3.0.0-4010520240507001",
+    "@dcloudio/uni-mp-weixin": "3.0.0-4010520240507001",
+    "dayjs": "^1.11.10",
+    "three": "^0.184.0",
+    "uview-plus": "^3.2.0",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@dcloudio/types": "^3.4.0",
+    "@dcloudio/uni-automator": "3.0.0-4010520240507001",
+    "@dcloudio/uni-cli-shared": "3.0.0-4010520240507001",
+    "@dcloudio/uni-stacktracey": "3.0.0-4010520240507001",
+    "@dcloudio/vite-plugin-uni": "3.0.0-4010520240507001",
+    "sass": "^1.71.1",
+    "vite": "^5.1.4"
+  }
+}

@@ -1,0 +1,832 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>白色污染治理舆情分析报告</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .stat-card.secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .stat-card.success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .stat-card.warning {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .platform-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .platform-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .platform-card .name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .platform-card .count {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .platform-card .sub {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .chart-box {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .sentiment-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .sentiment-item {
+            text-align: center;
+            padding: 20px 40px;
+            border-radius: 15px;
+        }
+
+        .sentiment-item.positive {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .sentiment-item.negative {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        .sentiment-item.neutral {
+            background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+            color: white;
+        }
+
+        .sentiment-item .percent {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .sentiment-item .count {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content-list {
+            margin-top: 20px;
+        }
+
+        .content-item {
+            display: flex;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+
+        .content-item:hover {
+            background: #f8f9fa;
+        }
+
+        .content-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .rank.top {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .content-info {
+            flex: 1;
+        }
+
+        .content-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .content-meta {
+            color: #666;
+            font-size: 0.85em;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .content-meta span {
+            display: flex;
+            align-items: center;
+        }
+
+        .sentiment-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .sentiment-tag.positive {
+            background: #c6efce;
+            color: #006100;
+        }
+
+        .sentiment-tag.negative {
+            background: #ffc7ce;
+            color: #9c0006;
+        }
+
+        .sentiment-tag.neutral {
+            background: #ffeb9c;
+            color: #9c5700;
+        }
+
+        .keyword-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .keyword-tag {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .chart-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sentiment-grid {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .sentiment-item {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>白色污染治理舆情分析报告</h1>
+            <p>生成时间：2026-04-04 17:13:42 | 覆盖平台：1个</p>
+        </div>
+
+        <!-- 核心数据 -->
+        <div class="card">
+            <h2>数据概览</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="number">135</div>
+                    <div class="label">帖子/笔记数</div>
+                </div>
+                <div class="stat-card secondary">
+                    <div class="number">150</div>
+                    <div class="label">视频数</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="number">0</div>
+                    <div class="label">总浏览/播放</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="number">0</div>
+                    <div class="label">总互动数</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 平台分布 -->
+        <div class="card">
+            <h2>平台分布</h2>
+            <div class="platform-grid">
+                
+                <div class="platform-card">
+                    <div class="name">哔哩哔哩</div>
+                    <div class="count">285</div>
+                    <div class="sub">帖子 135 | 视频 150</div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- 图表分析 -->
+        <div class="card">
+            <h2>数据分析</h2>
+            <div class="chart-container">
+                <div class="chart-box">
+                    <canvas id="platformChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 情感分析 -->
+        <div class="card">
+            <h2>情感倾向分析</h2>
+            <div class="sentiment-grid">
+                <div class="sentiment-item positive">
+                    <div class="percent">0.0%</div>
+                    <div class="count">正面 0 条</div>
+                </div>
+                <div class="sentiment-item neutral">
+                    <div class="percent">28500.0%</div>
+                    <div class="count">中性 285 条</div>
+                </div>
+                <div class="sentiment-item negative">
+                    <div class="percent">0.0%</div>
+                    <div class="count">负面 0 条</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 热门内容 -->
+        <div class="card">
+            <h2>热门帖子TOP10</h2>
+            <div class="content-list">
+                
+                <div class="content-item">
+                    <div class="rank top">1</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            PostItem(platform='哔哩哔哩', post_id='43199367', title='<em class="keyword">白色污染</em>的防与治', content=' 核心定义 白色污染 是指由废弃塑料制品，特别是塑料袋、塑料餐具、塑料薄膜等一次性塑料垃圾造成的环境污染现象。因为这些塑料制品多为白色，故得名“白色污染”。 --- 主要来源 白色污染的“元凶”主要来自我们日常生活中的一次性塑料制品： 1. 塑料袋：购物袋、垃圾袋等。 2. 一次性餐具：餐盒、碗、勺、叉、吸管等。 3. 塑料包装：商品过度包装、快递包装等。 4. 农用塑料薄膜：用于覆盖农作物以保温、保湿、防虫的薄膜，废弃后残留在土壤中。 5. 其他：饮料瓶、塑料杯、酸奶杯等。 --- 主要特点与危害 白色', author='', author_id='1356542237', publish_time='', likes=0, comments=0, shares=0, views=0, url='', tags=[], sentiment='负面', keywords=['白色污染'], raw_data={})
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank top">2</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            PostItem(platform='哔哩哔哩', post_id='16832416', title='对<em class="keyword">白色污染</em>说“不”', content='对白色污染说“不”!百度百科对白色污染的定义：白色污染（White Pollution）是对废塑料污染环境现象的一种形象称谓，是指用聚苯乙烯、聚丙烯、聚氯乙烯等高分子化合物制成的包装袋、农用地膜、一次性餐具、塑料瓶等塑料制品使用后被弃置成为固体废物，由于随意乱丢乱扔，难于降解处理，给生态环境和景观造成的污染。据统计，每年全球使用塑料袋约一万亿个，塑料瓶约两千亿个。人类社会生产出塑料，却没有好方法将之降解，近80%进入垃圾填埋场或自然环境。塑料垃圾对生态环境造成污染，这些塑料垃圾进入食物链后，又会', author='', author_id='196853074', publish_time='', likes=0, comments=0, shares=0, views=68, url='', tags=[], sentiment='负面', keywords=['白色污染'], raw_data={})
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank top">3</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            PostItem(platform='哔哩哔哩', post_id='25344154', title='一图了解“<em class="keyword">白色污染</em>”', content='随着越来越多国家对于塑料污染问题的重视，为对抗白色污染，全球禁塑热潮持续升温。塑料垃圾的数量之多、分布范围之广、影响之大令人警惕。', author='', author_id='494067546', publish_time='', likes=0, comments=0, shares=0, views=38, url='', tags=[], sentiment='负面', keywords=['白色污染'], raw_data={})
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">4</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            PostItem(platform='哔哩哔哩', post_id='43859145', title='【院士科普】废弃塑料大改造：从“<em class="keyword">白色污染</em>”到绿色循环', content=' [图片] 【院士科普】废弃塑料大改造：从“白色污染”到绿色循环 ', author='', author_id='11464329', publish_time='', likes=3, comments=0, shares=0, views=0, url='', tags=[], sentiment='中性', keywords=['白色污染'], raw_data={})
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">5</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            PostItem(platform='哔哩哔哩', post_id='7476447', title='《塑料》——海洋<em class="keyword">白色污染</em>', content='本片介绍了塑料对海洋的危害及其严重性。旨在呼吁大家关注海洋污染，保护生态环境。采用主副线的模式，主线是以一群前往复活节岛海域寻找垃圾的科学家，副线是位于海岸线旁的科学家发现的塑料的衍生物质对生物的各种危害。本片讲了几个对人有害的案例：       1.塑料在海洋中被分解，有毒物质进入海洋生物体内，通过食物链一层一层富集的毒素最后回归到了我们自己       2.海洋中的污染不仅仅只有塑料，日用品中的出现了很多纳米材料，这些颗粒体积被排入了大海，经过大海的”“磨练”它们变得越来越小，', author='', author_id='34583692', publish_time='', likes=4, comments=0, shares=0, views=204, url='', tags=[], sentiment='中性', keywords=['白色污染'], raw_data={})
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">6</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            PostItem(platform='哔哩哔哩', post_id='1677866', title='<em class="keyword">白色污染</em>，已经席卷全球，我们一起抵制<em class="keyword">白色污染</em>、拒绝<em class="keyword">白色</em>伤害！', content='塑料垃圾无处不在，在偏远的地区也能发现塑料垃圾身影，在任何海滩，河流，任何地方都可以发现人造塑料废物奇观，而且还在持续增加。这些废塑料大到大型容器，小到头发丝一样的微颗粒，这些塑料污染环境，土地，河流，海滩和海洋，每年有多大800万公吨的塑料最终进入我们的海洋。从鲸鱼，海狮和鸟类浮游生物等，废塑料正在极大地影响陆地动物和海洋生物，塑料碎片每年造成约100,000只海洋哺乳动物死亡，数百万只鸟类和鱼类死亡。然而，全世界大多数散落的塑料废物最终都会在海上结束。大量的海洋塑料碎片超出了视觉范围，由微观', author='', author_id='282239993', publish_time='', likes=4, comments=2, shares=0, views=253, url='', tags=[], sentiment='负面', keywords=['白色污染'], raw_data={})
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">7</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            PostItem(platform='哔哩哔哩', post_id='706770', title='<em class="keyword">白色污染</em>何时休？黄鹂鸟找来塑料纸，做鸟巢，这画面很刺眼！！！', content='大家日常生活中，除外就要买东西，吃的、喝的，都得用手提袋提着。最常见的手提袋还是那种塑料袋，塑料薄膜制成的。虽然国家一直在提倡环境保护，还我一片青山绿水。但是出门在外，随手一丢的习惯仍然非常严重，由于', author='', author_id='104130380', publish_time='', likes=4, comments=1, shares=0, views=153, url='', tags=[], sentiment='正面', keywords=['白色污染'], raw_data={})
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">8</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            PostItem(platform='哔哩哔哩', post_id='44134988', title='山东沃达纸业如何助力减少<em class="keyword">白色污染</em>？答案在这里！', content='> 餐桌上的外卖盒堆起来，一年能绕地球几圈？ “叮咚！您的外卖到了！” 这声音对当代年轻人来说再熟悉不过。一顿热乎乎的饭菜，背后却是一个巨大的环保难题——白色污染。 一次性饭盒、塑料袋、塑料餐具…全国每年产生的这类低值塑料包装，你知道有多少吗？答案是超过5000万吨。 它们回收难、处理成本高，成为顽固的“白色污染”源头。 那么问题来了：难道为了生活便利，我们就只能“牺牲”环境吗？我们每次点外卖、打包，是不是都在给地球“增负”？ 当然不是！今天，我就带你认识一家默默“较劲”的山东企业——山东沃达纸业，看看他', author='', author_id='3632318591797311', publish_time='', likes=0, comments=0, shares=0, views=0, url='', tags=[], sentiment='中性', keywords=['白色污染'], raw_data={})
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">9</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            PostItem(platform='哔哩哔哩', post_id='42646214', title='《告别<em class="keyword">白色污染</em>！甘蔗浆餐具：吃完就“消失”的环保神器！》', content='想象一下： 阳光明媚的周末野餐后，收拾残局时，那些一次性餐盘、碗筷、杯子，不再是令人头疼的塑料垃圾，而是可以随手埋进土里，或投入堆肥桶，静静等待化作春泥滋养万物的“养料”。这并非科幻场景，而是甘蔗浆环保餐具带来的真实绿色革命！ 白色污染，地球难以承受之“重”塑料餐具的便利背后，是触目惊心的代价：它们占据垃圾填埋场数百年不腐，随风飘散污染海洋与田野，甚至化身微塑料潜入食物链。每一次外卖订单、每一次派对聚餐，都在无形中为这颗星球增添负担。环保，早已不是口号，而是刻不容缓的行动。  甘蔗的华丽转身：从农业废弃物', author='', author_id='12005054', publish_time='', likes=0, comments=0, shares=0, views=1, url='', tags=[], sentiment='负面', keywords=['白色污染'], raw_data={})
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">10</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            PostItem(platform='哔哩哔哩', post_id='41714261', title='轻物质垃圾精细化破碎，助力“<em class="keyword">白色污染</em>”资源化处理', content='一、轻物质垃圾破碎与资源化的挑战与机遇 1. 轻物质垃圾的特性与难点\n成分复杂：轻物质垃圾通常包含多种材料（如PP/PE塑料、聚酯纤维、发泡材料等），混合处理难度大。\n体积大、密度低：占用大量空间，运输和处理成本高。\n传统处理方式缺陷：\n填埋：占用土地，降解周期长，还可能释放微塑料污染土壤和水源。\n焚烧：虽然能快速减容，但塑料燃烧会产生有毒气体（如二噁英、酸性污染物），且浪费资源。\n粗放回收：低值塑料（如购物袋、包装膜）因分拣成本高，常被直接丢弃。 [图片]\n \n2. 精细化破碎的核心价值\n提升分选效率：', author='', author_id='58762192', publish_time='', likes=0, comments=0, shares=0, views=0, url='', tags=[], sentiment='负面', keywords=['白色污染'], raw_data={})
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- 热门视频 -->
+        <div class="card">
+            <h2>热门视频TOP10</h2>
+            <div class="content-list">
+                
+                <div class="content-item">
+                    <div class="rank top">1</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            VideoItem(platform='哔哩哔哩', video_id='BV1w54y1z7VR', title='【自制公益广告】 白色污染 公益广告 “P
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>▶️ 0</span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank top">2</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            VideoItem(platform='哔哩哔哩', video_id='BV1og9LBuEih', title='双 污染 图标≠异色 三 污染 必定异色！
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>▶️ 0</span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank top">3</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            VideoItem(platform='哔哩哔哩', video_id='BV1H14y1m73n', title='科普动画 - 解密“ 白色污染 ”', d
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>▶️ 0</span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">4</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            VideoItem(platform='哔哩哔哩', video_id='BV1JY411F7Dz', title='（有趣动画）大气 污染 ：PM2.5到底有
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>▶️ 0</span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">5</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            VideoItem(platform='哔哩哔哩', video_id='BV1cDPTeoE87', title='天门河 污染 事件后续:事件前因后果完整版
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>▶️ 0</span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">6</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            VideoItem(platform='哔哩哔哩', video_id='BV1B69uBsExp', title='异色精灵 污染 图标判断法修复了？纯谣言！
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>▶️ 0</span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">7</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            VideoItem(platform='哔哩哔哩', video_id='BV1fpDNBzE7y', title='上线10分钟，60球4 污染 3图标，传送
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>▶️ 0</span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">8</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            VideoItem(platform='哔哩哔哩', video_id='BV1h5XjBaEY8', title='［洛克王国手游］世界捉宠切记自己清 污染 
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>▶️ 0</span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">9</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            VideoItem(platform='哔哩哔哩', video_id='BV1AD9gBqELL', title='谁知道这是卡bug了还是啥，三个花一个普通
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>▶️ 0</span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <div class="rank ">10</div>
+                    <div class="content-info">
+                        <div class="content-title">
+                            VideoItem(platform='哔哩哔哩', video_id='BV1vjxPzEEAL', title='洛克贝不够用？在这里 污染 精灵一抓一大把
+                            <span class="sentiment-tag 中性">中性</span>
+                        </div>
+                        <div class="content-meta">
+                            <span></span>
+                            <span>👤 </span>
+                            <span>▶️ 0</span>
+                            <span>👍 0</span>
+                            <span>💬 0</span>
+                            <span>🔗 <a href="" target="_blank">查看原文</a></span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- 关键词云 -->
+        
+
+        <div class="footer">
+            <p>本报告由绿法通舆情分析系统自动生成</p>
+            <p>数据仅供参考，请遵守各平台使用条款</p>
+        </div>
+    </div>
+
+    <script>
+        // 平台分布图表
+        const platformCtx = document.getElementById('platformChart').getContext('2d');
+        new Chart(platformCtx, {
+            type: 'bar',
+            data: {
+                labels: ["\u54d4\u54e9\u54d4\u54e9"],
+                datasets: [{
+                    label: '帖子数',
+                    data: [135],
+                    backgroundColor: 'rgba(102, 126, 234, 0.8)'
+                }, {
+                    label: '视频数',
+                    data: [150],
+                    backgroundColor: 'rgba(118, 75, 162, 0.8)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '各平台内容分布'
+                    }
+                }
+            }
+        });
+
+        // 情感分析图表
+        const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
+        new Chart(sentimentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['正面', '中性', '负面'],
+                datasets: [{
+                    data: [
+                        0,
+                        285,
+                        0
+                    ],
+                    backgroundColor: ['#11998e', '#f2994a', '#eb3349']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '情感倾向分布'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+        

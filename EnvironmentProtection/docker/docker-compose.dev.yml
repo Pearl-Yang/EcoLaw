@@ -1,0 +1,80 @@
+# Docker Compose 开发环境配置
+
+services:
+  # 继承基础服务
+  mysql:
+    ports:
+      - "3306:3306"
+  
+  redis:
+    ports:
+      - "6379:6379"
+  
+  minio:
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  # API 后端服务
+  api-server:
+    build:
+      context: ../services/api-server
+      dockerfile: Dockerfile
+    container_name: lvfat-api-server
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/lvfat?useUnicode=true&characterEncoding=utf8
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123456
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - lvfat-network
+
+  # AI 服务
+  ai-service:
+    build:
+      context: ../services/ai-service
+      dockerfile: Dockerfile
+    container_name: lvfat-ai-service
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      LLM_API_KEY: ${LLM_API_KEY}
+      LLM_BASE_URL: ${LLM_BASE_URL:-https://api.openai.com/v1}
+      MILVUS_HOST: milvus
+      REDIS_HOST: redis
+    depends_on:
+      - milvus
+      - redis
+    networks:
+      - lvfat-network
+
+  # Nginx 网关
+  nginx:
+    build:
+      context: ../infrastructure/nginx
+      dockerfile: Dockerfile
+    container_name: lvfat-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../apps/web-admin/dist:/usr/share/nginx/html/web-admin
+    depends_on:
+      - api-server
+      - ai-service
+    networks:
+      - lvfat-network
+
+networks:
+  lvfat-network:
+    external: true

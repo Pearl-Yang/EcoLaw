@@ -1,0 +1,576 @@
+// 绿法通 - 通用组件样式 v2.0
+// Common Components Styles - Professional Blue Theme
+
+// ============ 页面容器 ============
+.page-container {
+  padding: $spacing-xl;
+  min-height: calc(100vh - var(--header-height));
+  max-width: 1400px;
+  margin: 0 auto;
+
+  &__header {
+    margin-bottom: $spacing-xl;
+
+    &-title {
+      font-size: $font-size-2xl;
+      font-weight: 600;
+      color: $color-text-primary;
+      margin-bottom: $spacing-xs;
+    }
+
+    &-desc {
+      font-size: $font-size-sm;
+      color: $color-text-tertiary;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+  }
+}
+
+// ============ 面板/卡片 ============
+.panel {
+  background: $color-bg-white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-sm;
+  border: 1px solid $color-border;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-lg $spacing-xl;
+    border-bottom: 1px solid $color-border;
+
+    &-title {
+      display: flex;
+      align-items: center;
+      font-size: $font-size-md;
+      font-weight: 600;
+      color: $color-text-primary;
+
+      &::before {
+        content: '';
+        display: block;
+        width: 4px;
+        height: 16px;
+        background: $color-primary;
+        border-radius: 2px;
+        margin-right: $spacing-sm;
+      }
+    }
+  }
+
+  &__body {
+    padding: $spacing-xl;
+  }
+
+  &__footer {
+    padding: $spacing-lg $spacing-xl;
+    border-top: 1px solid $color-border;
+    background: $color-bg-gray;
+  }
+}
+
+// ============ 统计卡片 ============
+.stat-card {
+  background: $color-bg-white;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  box-shadow: $shadow-sm;
+  border: 1px solid $color-border;
+  transition: all 0.25s ease;
+  position: relative;
+
+  &:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: $radius-lg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: $spacing-base;
+
+    &.primary {
+      background: rgba($color-primary, 0.1);
+      color: $color-primary;
+    }
+
+    &.success {
+      background: rgba($color-success, 0.1);
+      color: $color-success;
+    }
+
+    &.warning {
+      background: rgba($color-warning, 0.1);
+      color: $color-warning;
+    }
+
+    &.danger {
+      background: rgba($color-danger, 0.1);
+      color: $color-danger;
+    }
+
+    &.purple {
+      background: rgba($color-purple, 0.1);
+      color: $color-purple;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__value {
+    font-size: $font-size-3xl;
+    font-weight: 700;
+    color: $color-text-primary;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__trend {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    font-size: $font-size-xs;
+
+    &.up {
+      color: $color-success;
+    }
+
+    &.down {
+      color: $color-danger;
+    }
+  }
+}
+
+// ============ 表格 ============
+.table-container {
+  background: $color-bg-white;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  border: 1px solid $color-border;
+
+  .el-table {
+    --el-table-border-color: #{$color-border};
+    --el-table-header-bg-color: #{$color-bg-gray};
+    --el-table-row-hover-bg-color: #{$color-bg-hover};
+    --el-table-current-row-bg-color: #{$color-bg-active};
+
+    font-size: $font-size-sm;
+
+    th.el-table__cell {
+      font-weight: 600;
+      color: $color-text-primary;
+      background: $color-bg-gray !important;
+    }
+
+    td.el-table__cell {
+      padding: $spacing-md 0;
+      color: $color-text-secondary;
+    }
+
+    tr:hover > td {
+      background: $color-bg-hover !important;
+    }
+  }
+}
+
+// ============ 搜索栏 ============
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  padding: $spacing-lg;
+  background: $color-bg-white;
+  border-radius: $radius-lg;
+  border: 1px solid $color-border;
+  margin-bottom: $spacing-lg;
+
+  &__item {
+    flex: 1;
+    min-width: 200px;
+
+    label {
+      display: block;
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      margin-bottom: $spacing-xs;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: flex-end;
+    gap: $spacing-sm;
+  }
+}
+
+// ============ 网格布局 ============
+.grid {
+  display: grid;
+  gap: $spacing-xl;
+
+  &-2 { grid-template-columns: repeat(2, 1fr); }
+  &-3 { grid-template-columns: repeat(3, 1fr); }
+  &-4 { grid-template-columns: repeat(4, 1fr); }
+  &-auto { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+}
+
+// ============ 渐变背景 ============
+.bg-gradient {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+
+  &-primary {
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  }
+
+  &-dark {
+    background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+  }
+
+  &-light {
+    background: linear-gradient(135deg, rgba($color-primary, 0.05) 0%, rgba($color-primary-light, 0.08) 100%);
+  }
+}
+
+// ============ 分隔线 ============
+.divider {
+  height: 1px;
+  background: $color-border;
+  margin: $spacing-xl 0;
+
+  &-vertical {
+    width: 1px;
+    height: auto;
+    margin: 0 $spacing-xl;
+  }
+}
+
+// ============ 头像 ============
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-full;
+  overflow: hidden;
+  background: $color-bg-gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &-sm { width: 32px; height: 32px; }
+  &-lg { width: 56px; height: 56px; }
+  &-xl { width: 80px; height: 80px; }
+  &-2xl { width: 120px; height: 120px; }
+}
+
+// ============ 进度条 ============
+.progress {
+  width: 100%;
+  height: 8px;
+  background: $color-bg-gray;
+  border-radius: $radius-full;
+  overflow: hidden;
+
+  &__bar {
+    height: 100%;
+    border-radius: $radius-full;
+    transition: width 0.3s ease;
+
+    &.primary { background: $color-primary-gradient; }
+    &.success { background: $color-success; }
+    &.warning { background: $color-warning; }
+    &.danger { background: $color-danger; }
+  }
+
+  &-sm { height: 4px; }
+  &-lg { height: 12px; }
+  &-xl { height: 16px; }
+}
+
+// ============ 星级评分 ============
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  &__star {
+    color: $color-warning;
+    font-size: $font-size-base;
+
+    &.empty {
+      color: $color-border;
+    }
+  }
+
+  &__value {
+    margin-left: $spacing-xs;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+}
+
+// ============ 标签页 ============
+.tabs {
+  display: flex;
+  border-bottom: 2px solid $color-border;
+  margin-bottom: $spacing-xl;
+
+  &__item {
+    padding: $spacing-md $spacing-xl;
+    font-size: $font-size-base;
+    color: $color-text-secondary;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: transparent;
+      transition: all 0.2s ease;
+    }
+
+    &:hover {
+      color: $color-primary;
+    }
+
+    &.active {
+      color: $color-primary;
+      font-weight: 600;
+
+      &::after {
+        background: $color-primary;
+      }
+    }
+  }
+}
+
+// ============ 步骤条 ============
+.steps {
+  display: flex;
+  justify-content: space-between;
+
+  &__item {
+    flex: 1;
+    text-align: center;
+    position: relative;
+
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: calc(50% + 20px);
+      right: calc(-50% + 20px);
+      height: 2px;
+      background: $color-border;
+    }
+
+    &.completed:not(:last-child)::after {
+      background: $color-primary;
+    }
+
+    &.active:not(:last-child)::after {
+      background: linear-gradient(to right, $color-primary, $color-border);
+    }
+  }
+
+  &__icon {
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-full;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto $spacing-sm;
+    background: $color-bg-gray;
+    color: $color-text-tertiary;
+    font-size: $font-size-sm;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+
+    &.active {
+      background: $color-primary;
+      color: $color-text-white;
+    }
+
+    &.completed {
+      background: $color-primary;
+      color: $color-text-white;
+    }
+  }
+
+  &__title {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+
+    &.active {
+      color: $color-primary;
+      font-weight: 600;
+    }
+  }
+}
+
+// ============ 消息提示 ============
+.message {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+  padding: $spacing-base;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-md;
+
+  &__icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__title {
+    font-weight: 600;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__desc {
+    font-size: $font-size-sm;
+    color: inherit;
+    opacity: 0.9;
+  }
+
+  &.info {
+    background: rgba($color-info, 0.1);
+    color: $color-info;
+  }
+
+  &.success {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+
+  &.warning {
+    background: rgba($color-warning, 0.1);
+    color: $color-warning;
+  }
+
+  &.error {
+    background: rgba($color-danger, 0.1);
+    color: $color-danger;
+  }
+}
+
+// ============ 时间线 ============
+.timeline {
+  position: relative;
+  padding-left: $spacing-xl;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: $color-border;
+  }
+
+  &__item {
+    position: relative;
+    padding-bottom: $spacing-xl;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: -$spacing-xl + 4px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: $radius-full;
+      background: $color-bg-white;
+      border: 2px solid $color-primary;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  &__time {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__content {
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+  }
+}
+
+// ============ 响应式网格 ============
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -#{$spacing-md};
+}
+
+[class*="col-"] {
+  padding: 0 $spacing-md;
+}
+
+@for $i from 1 through 12 {
+  .col-#{$i} {
+    width: calc(#{$i} / 12 * 100%);
+  }
+
+  .col-offset-#{$i} {
+    margin-left: calc(#{$i} / 12 * 100%);
+  }
+}
+
+@include mobile {
+  @for $i from 1 through 12 {
+    .col-#{$i} {
+      width: 100%;
+    }
+  }
+}
+
+@include tablet {
+  @for $i from 1 through 12 {
+    .col-md-#{$i} {
+      width: calc(#{$i} / 12 * 100%);
+    }
+  }
+}

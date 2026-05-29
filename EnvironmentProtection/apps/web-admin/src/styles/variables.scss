@@ -1,0 +1,173 @@
+// 绿法通 - 设计系统变量 v2.0
+// Design System Variables - Professional Blue-Yellow-Green Theme
+
+// ============ 主色调（蓝色系）============
+$color-primary: #66a8d6; // 主色蓝
+$color-primary-light: #4d91fdd5; // 亮蓝
+$color-primary-lighter: #a3c9f9; // 浅蓝
+$color-primary-dark: #3761d7; // 深蓝
+$color-primary-hover: #4062d2; // 悬停蓝
+$color-primary-gradient: linear-gradient(135deg, #6c85bc 0%, #3B82F6 100%);
+$color-primary-light-gradient: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+
+// ============ 辅助色（绿色系）============
+$color-secondary: #54f5c2; // 绿色
+$color-secondary-light: #91eecf; // 亮绿
+$color-accent: #58cca1; // 薄荷绿
+
+// ============ 功能色（黄绿白灰色系）============
+$color-success: #85e4c5; // 绿
+$color-warning: #f9dca8; // 黄
+$color-danger: #eda4a4; // 红色
+$color-info: #c2d8f6; // 蓝灰
+$color-purple: #c6b5ed; // 紫
+
+// ============ 背景色系 ============
+$color-bg-primary: #F8FAFC; // 页面背景（冷灰白）
+$color-bg-white: #FFFFFF; // 卡片背景
+$color-bg-gray: #F1F5F9; // 灰色背景
+$color-bg-dark: #11182a; // 深色背景
+$color-bg-sidebar: #FFFFFF; // 侧边栏背景
+$color-bg-hover: #F1F5F9; // 悬停背景
+$color-bg-active: #EFF6FF; // 选中背景
+$color-bg-gradient: linear-gradient(180deg, #FAFAFA 0%, #F0F4F8 100%);
+
+// ============ 文字色系 ============
+$color-text-primary: #0F172A; // 主文字（近黑）
+$color-text-secondary: #475569; // 次要文字（灰蓝）
+$color-text-tertiary: #94A3B8; // 辅助文字（浅灰）
+$color-text-placeholder: #CBD5E1; // 占位符
+$color-text-white: #FFFFFF; // 反白文字
+$color-text-link: #b3f6c9; // 链接文字
+
+// ============ 边框色系 ============
+$color-border: #E2E8F0; // 边框
+$color-border-light: #F1F5F9; // 浅边框
+$color-border-dark: #CBD5E1; // 深边框
+
+// ============ 阴影系统 ============
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+$shadow-primary: 0 4px 14px rgba(37, 99, 235, 0.25);
+$shadow-success: 0 4px 14px rgba(40, 210, 154, 0.25);
+$shadow-warning: 0 4px 14px rgba(226, 173, 82, 0.25);
+$shadow-danger: 0 4px 14px rgba(239, 68, 68, 0.25);
+
+// ============ 圆角系统 ============
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
+$radius-2xl: 24px;
+$radius-full: 9999px;
+
+// ============ 字体系统 ============
+$font-family: 'Inter', 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, 'Microsoft YaHei', sans-serif;
+$font-size-xs: 11px;
+$font-size-sm: 13px;
+$font-size-base: 14px;
+$font-size-md: 15px;
+$font-size-lg: 16px;
+$font-size-xl: 18px;
+$font-size-2xl: 20px;
+$font-size-3xl: 24px;
+$font-size-4xl: 30px;
+$font-size-5xl: 36px;
+
+// ============ 行高系统 ============
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+// ============ 间距系统 ============
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 12px;
+$spacing-base: 16px;
+$spacing-lg: 20px;
+$spacing-xl: 24px;
+$spacing-2xl: 32px;
+$spacing-3xl: 40px;
+$spacing-4xl: 48px;
+
+// ============ 布局尺寸 ============
+$header-height: 60px;
+$sidebar-width: 240px;
+$sidebar-collapsed-width: 64px;
+
+// ============ 过渡动画 ============
+$transition-fast: 0.15s ease;
+$transition-normal: 0.25s ease;
+$transition-slow: 0.35s ease;
+
+// ============ CSS变量（用于运行时）============
+:root {
+  --color-primary: #{$color-primary};
+  --color-primary-light: #{$color-primary-light};
+  --color-primary-dark: #{$color-primary-dark};
+  --color-secondary: #{$color-secondary};
+  --color-accent: #{$color-accent};
+  --color-success: #{$color-success};
+  --color-warning: #{$color-warning};
+  --color-danger: #{$color-danger};
+  --color-info: #{$color-info};
+  --color-purple: #{$color-purple};
+  --color-bg-primary: #{$color-bg-primary};
+  --color-bg-white: #{$color-bg-white};
+  --color-bg-gray: #{$color-bg-gray};
+  --color-bg-dark: #{$color-bg-dark};
+  --color-text-primary: #{$color-text-primary};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-tertiary: #{$color-text-tertiary};
+  --color-border: #{$color-border};
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+  --shadow-xl: #{$shadow-xl};
+  --shadow-primary: #{$shadow-primary};
+  --radius-sm: #{$radius-sm};
+  --radius-md: #{$radius-md};
+  --radius-lg: #{$radius-lg};
+  --radius-xl: #{$radius-xl};
+  --radius-2xl: #{$radius-2xl};
+  --radius-full: #{$radius-full};
+  --header-height: #{$header-height};
+  --sidebar-width: #{$sidebar-width};
+}
+
+// ============ 响应式断点 ============
+$breakpoints: (
+  'sm': 640px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1280px,
+  '2xl': 1536px
+);
+
+@mixin responsive($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+}
+
+@mixin mobile {
+  @media (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: 768px) and (max-width: 1023px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 1024px) {
+    @content;
+  }
+}

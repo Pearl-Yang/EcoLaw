@@ -1,0 +1,18 @@
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+langchain==0.1.12
+langchain-community==0.0.29
+langchain-openai==0.0.5
+pydantic==2.6.1
+pydantic-settings==2.1.0
+python-dotenv==1.0.1
+pymysql==1.1.0
+# milvus-lite==2.3.7  # Windows not supported
+# pymilvus==2.3.6
+sentence-transformers==2.4.0
+redis==5.0.1
+celery==5.3.6
+python-multipart==0.0.9
+httpx==0.26.0
+aiofiles==23.2.1
+jinja2==3.1.3

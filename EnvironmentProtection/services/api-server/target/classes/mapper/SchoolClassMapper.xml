@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lvfat.repository.SchoolClassMapper">
+    
+    <!-- 分页查询班级 -->
+    <select id="selectClassPage" resultType="com.lvfat.entity.SchoolClass">
+        SELECT * FROM school_class
+        WHERE deleted = 0
+        <if test="schoolId != null and schoolId != ''">
+            AND school_id = #{schoolId}
+        </if>
+        <if test="grade != null">
+            AND grade = #{grade}
+        </if>
+        <if test="academicYear != null and academicYear != ''">
+            AND academic_year = #{academicYear}
+        </if>
+        ORDER BY grade, class_number
+    </select>
+    
+</mapper>
